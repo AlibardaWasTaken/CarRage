@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class HumanNpc : MonoBehaviour, Iinteractable, IHittable
         CommonSoundManager.Instance.PlayRandomGrindSound();
         CarInputHandler.Instance.topDownCarController.Eat();
         Instantiate((GameObject)Resources.Load("BloodExp"), this.transform.position, Quaternion.identity);
+        MakeOthersScared();
         Destroy(this.gameObject);
     }
 
@@ -21,8 +23,10 @@ public class HumanNpc : MonoBehaviour, Iinteractable, IHittable
 
     private Rigidbody2D _rigidbody;
 
-    private Vector2 _targetDirection;
+    private Vector3 _targetDirection;
 
+    [SerializeField]
+    private float scareRadius;
 
     private void OnDestroy()
     {
@@ -38,6 +42,10 @@ public class HumanNpc : MonoBehaviour, Iinteractable, IHittable
 
     public System.Action onDeath;
 
+    private bool scared = false;
+
+    public float ScareRadius { get => scareRadius; set => scareRadius = value; }
+
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -52,45 +60,82 @@ public class HumanNpc : MonoBehaviour, Iinteractable, IHittable
         SetVelocity();
         UpdateTargetDirection();
         RotateTowardsTarget();
-        
+
+
+  
     }
 
 
    private void FindClosestWayPoint()
     {
         currentWaypoint = WayPointCalculator.FindClosestWayPoint(this.gameObject.transform);
+        _targetDirection = currentWaypoint.transform.position;
     }
 
     private void UpdateTargetDirection()
     {
         //HandleRandomDirectionChange();
-        if (currentWaypoint != null && Vector2.Distance(this.transform.position, currentWaypoint.transform.position) < currentWaypoint.nextWaypointNode.minDistanceToReachWaypoint)
+        if (scared == false && currentWaypoint != null && Vector2.Distance(this.transform.position, currentWaypoint.transform.position) < currentWaypoint.nextWaypointNode.minDistanceToReachWaypoint)
         {
            
             currentWaypoint = currentWaypoint.nextWaypointNode;
+            _targetDirection = currentWaypoint.transform.position;
         }
 
     }
 
-    private void HandleRandomDirectionChange()
+
+    private void MakeOthersScared()
     {
-        _changeDirectionCooldown -= Time.deltaTime;
 
-        if (_changeDirectionCooldown <= 0)
+        
+        var collidersInRange = Physics2D.OverlapCircleAll(gameObject.transform.position, ScareRadius);
+        Debug.Log(collidersInRange.Length);
+        foreach (var collider in collidersInRange)
         {
-            float angleChange = Random.Range(-90f, 90f);
-            Quaternion rotation = Quaternion.AngleAxis(angleChange, transform.forward);
-            _targetDirection = rotation * _targetDirection;
-
-            _changeDirectionCooldown = Random.Range(4f, 15f);
+            var colliderObject = collider.gameObject;
+            var resultComponent = colliderObject.GetComponent<HumanNpc>();
+            if (resultComponent != null)
+            {
+        
+                resultComponent.MakeThisScared();
+            }
         }
     }
+    public void MakeThisScared()
+    {
+        if (scared == false)
+        {
+           
+            scared = true;
+            StartCoroutine(ScaredWalk());
+        }
+    }
+   private IEnumerator ScaredWalk()
+    {
+
+           
+            _changeDirectionCooldown = Random.Range(2f, 5f);
+            _changeDirectionCooldown -= Time.deltaTime;
+            while (_changeDirectionCooldown > 0)
+            {
+                yield return new WaitForEndOfFrame();
+                float angleChange = Random.Range(-90f, 90f);
+                Quaternion rotation = Quaternion.AngleAxis(angleChange, transform.forward);
+                _targetDirection = rotation * _targetDirection;
+            }
+        FindClosestWayPoint();
+            scared = false;
+        
+        
+    }
+
 
 
 
     private void RotateTowardsTarget()
     {
-        float angle = (Mathf.Atan2(currentWaypoint.transform.position.y - transform.position.y, currentWaypoint.transform.position.x - transform.position.x) * Mathf.Rad2Deg) - 90;
+        float angle = (Mathf.Atan2(_targetDirection.y - transform.position.y, _targetDirection.x - transform.position.x) * Mathf.Rad2Deg) - 90;
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
     }
@@ -104,6 +149,7 @@ public class HumanNpc : MonoBehaviour, Iinteractable, IHittable
     {
         CommonSoundManager.Instance.ScreameffectContainer.PlayRandom();
         Instantiate((GameObject)Resources.Load("BloodExp"), this.transform.position, Quaternion.identity);
+        MakeOthersScared();
         Destroy(this.gameObject);
     }
 }

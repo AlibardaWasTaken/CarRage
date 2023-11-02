@@ -186,6 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 5
   _rotationSpeed: 150
+  scareRadius: 25
 --- !u!50 &8342061095878242062
 Rigidbody2D:
   serializedVersion: 4

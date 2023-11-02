@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     //Events
     public event Action<GameManager> OnGameStateChanged;
 
+
+    public UpgradeValueHolder upgradeValueHolder;
+
     private void Awake()
     {
         if (instance == null)
