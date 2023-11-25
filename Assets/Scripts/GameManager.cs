@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,22 +15,32 @@ public class GameManager : MonoBehaviour
     GameStates gameState = GameStates.countDown;
 
     //Time
-    float raceStartedTime = 0;
-    float raceCompletedTime = 0;
+   private float raceStartedTime = 0;
+   private float raceCompletedTime = 0;
+
+
+
+ 
+
+
+    public static UpgradeValueHolder ValueHolder;
 
     //Driver information
-    List<DriverInfo> driverInfoList = new List<DriverInfo>();
+    private List<DriverInfo> driverInfoList = new List<DriverInfo>();
 
     //Events
     public event Action<GameManager> OnGameStateChanged;
 
 
-    public UpgradeValueHolder upgradeValueHolder;
+   
 
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            InitSave();
+        }   
         else
         {
             Destroy(gameObject);
@@ -37,6 +48,42 @@ public class GameManager : MonoBehaviour
         }
 
 
+    }
+
+
+    public static void SaveData()
+    {
+        SaveInitiator.SaveValues(ValueHolder);
+
+    }
+
+    private void InitSave()
+    {
+        var values = SaveInitiator.GetValues();
+        if (values != null)
+        {
+            ValueHolder = values;
+        }
+        else
+        {
+            Debug.Log("Cant find save , creating new");
+            ValueHolder = new UpgradeValueHolder();
+
+
+            foreach (var slot in ShopManager.instance.Items)
+            {
+                ValueHolder.UpgradesLevels.Add(slot, 0);
+            }
+
+            foreach (var Upg in (UpgradeEnums[])Enum.GetValues(typeof(UpgradeEnums)))
+            {
+                ValueHolder.EnumsValuesDictionary.Add(Upg, 0);
+            }
+           
+        }
+
+
+        ValueHolder.Points += 99999;
     }
 
     // Start is called before the first frame update

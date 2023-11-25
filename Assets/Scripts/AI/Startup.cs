@@ -2,20 +2,20 @@
 
 public class Startup
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void InstantiatePrefabs()
-    {
-        Debug.Log("-- Instantiating objects --");
+    //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    //public static void InstantiatePrefabs()
+    //{
+    //    Debug.Log("-- Instantiating objects --");
 
-        GameObject[] prefabsToInstantiate = Resources.LoadAll<GameObject>("InstantiateOnLoad/");
+    //    GameObject[] prefabsToInstantiate = Resources.LoadAll<GameObject>("InstantiateOnLoad/");
 
-        foreach (GameObject prefab in prefabsToInstantiate)
-        {
-            Debug.Log($"Creating {prefab.name}");
+    //    foreach (GameObject prefab in prefabsToInstantiate)
+    //    {
+    //        Debug.Log($"Creating {prefab.name}");
 
-            GameObject.Instantiate(prefab);
-        }
+    //        GameObject.Instantiate(prefab);
+    //    }
 
-        Debug.Log("-- Instantiating objects done --");
-    }
+    //    Debug.Log("-- Instantiating objects done --");
+    //}
 }

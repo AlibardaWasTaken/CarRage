@@ -7,12 +7,20 @@ using UnityEngine;
 public class ShopItemScritpableObject : ScriptableObject, ISerializationCallbackReceiver
 {
 
-    public int Cost;
-    public float CostMult;
-    public int MaxLvl;
-    public string Name;
+    public int InitialCost = 50;
+    public float CostMult = 1.5f;
+    public int MaxLvl = 50;
+    public string Name ;
     public static Dictionary<Guid, ShopItemScritpableObject> RuntimeLookup = new Dictionary<Guid, ShopItemScritpableObject>();
+
+    public List<UpgradeEnumValue> UpgradeEnumsVal = new List<UpgradeEnumValue>();
     [HideInInspector] public GUIDContainer GUIDContainer;
+
+    public int CalculateCost()
+    {
+        return (int)(InitialCost + Mathf.Pow(CostMult * GameManager.ValueHolder.UpgradesLevels[this], 2));
+    }
+
 
     public void OnBeforeSerialize()
     {
