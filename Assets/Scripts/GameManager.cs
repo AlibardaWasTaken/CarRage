@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameStates { countDown, running, raceOver };
 
+[DefaultExecutionOrder(-10)]
 public class GameManager : MonoBehaviour
 {
     //Static instance of GameManager so other scripts can access it
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            InitSave();
+            
         }   
         else
         {
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
     }
 
 
+
     public static void SaveData()
     {
         SaveInitiator.SaveValues(ValueHolder);
@@ -60,9 +62,11 @@ public class GameManager : MonoBehaviour
     private void InitSave()
     {
         var values = SaveInitiator.GetValues();
+
         if (values != null)
         {
             ValueHolder = values;
+
         }
         else
         {
@@ -79,22 +83,34 @@ public class GameManager : MonoBehaviour
             {
                 ValueHolder.EnumsValuesDictionary.Add(Upg, 0);
             }
-           
+
+
+
+            foreach (KeyValuePair<UpgradeEnums,int> item in ValueHolder.EnumsValuesDictionary)
+            {
+                Debug.Log(item.Key);
+            }
         }
 
 
-        ValueHolder.Points += 99999;
+       // ValueHolder.Points += 99999;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        InitSave();
         driverInfoList.Add(new DriverInfo(1, "P1", 0, false));
 
     }
 
-    void LevelStart()
+    public static void AddPoints(int point)
+    {
+        ValueHolder.Points += point;
+    }
+
+
+    private void LevelStart()
     {
         gameState = GameStates.countDown;
         HealthBar.Instance.SetBloodHealth(100);
@@ -120,11 +136,20 @@ public class GameManager : MonoBehaviour
 
     public float GetRaceTime()
     {
-        if (gameState == GameStates.countDown)
+        switch (gameState)
+        {
+            case GameStates.countDown:
             return 0;
-        else if (gameState == GameStates.raceOver)
+
+            case GameStates.raceOver:
             return raceCompletedTime - raceStartedTime;
-        else return Time.time - raceStartedTime;
+
+
+            default:
+            return Time.time - raceStartedTime;
+        }
+
+
     }
 
     //Driver information handling
@@ -185,6 +210,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("OnRaceCompleted");
 
         raceCompletedTime = Time.time;
+
+        ShopManager.RefreshPointsText();
 
         ChangeGameState(GameStates.raceOver);
     }

@@ -13,10 +13,10 @@ public class CarHitHandler : MonoBehaviour
     public virtual void OnHit(Collision2D collision)
     {
         CarSfxHandler.PlayHitSound(collision.relativeVelocity.magnitude);
-        var Hitable = collision.gameObject.GetComponent<IHittable>();
-        if (Hitable != null)
-        {
+
+        
+        if (collision.gameObject.TryGetComponent(out IHittable Hitable))
             Hitable.OnHit();
-        }
+        
     }
 }

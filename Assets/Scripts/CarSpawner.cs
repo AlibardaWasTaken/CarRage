@@ -4,26 +4,14 @@ using UnityEngine;
 
 public class CarSpawner : ObjectSpawner
 {
-
-
-    [SerializeField]
-    private int CarLimiter = 100;
-
-    private int CarAmount = 0;
-
-    protected override bool Condition()
+    protected override void OnPoolGet(GameObject obj)
     {
-        return (CarLimiter > CarAmount);
-    }
-    protected override void OnSpawn(GameObject SpawnedObj)
-    {
-        CarAmount++;
-        SpawnedObj.GetComponent<TopDownEnemyCar>().onDeath += RemoveCarAmount;
+        base.OnPoolGet(obj);
+        var CarComp = obj.GetComponent<TopDownEnemyCar>();
+
+
+        CarComp.SetInitialHp(Random.Range(2, 6));
     }
 
-
-    public void RemoveCarAmount()
-    {
-        CarAmount--;
-    }
 }
+

@@ -29,9 +29,9 @@ public class TopDownCarController : MonoBehaviour
     private bool isjumping = false;
 
     //Components
-    [SerializeField] private Rigidbody2D carRigidbody2D;
-    [SerializeField] private Collider2D carCollider;
-    [SerializeField] private CarSFXHandler carSfxHandler;
+    private Rigidbody2D carRigidbody2D;
+    private Collider2D carCollider;
+    private CarSFXHandler carSfxHandler;
 
     #region enc
     public float DriftFactor { get => driftFactor; set => driftFactor = value; }
@@ -47,19 +47,23 @@ public class TopDownCarController : MonoBehaviour
     public float RotationAngle { get => rotationAngle; set => rotationAngle = value; }
     public float VelocityVsUp { get => velocityVsUp; set => velocityVsUp = value; }
     public bool IsJumping { get => isjumping; set => isjumping = value; }
+    public Rigidbody2D CarRigidbody2D { get => carRigidbody2D; protected set => carRigidbody2D = value; }
+    public Collider2D CarCollider { get => carCollider; protected set => carCollider = value; }
+    public CarSFXHandler CarSfxHandler { get => carSfxHandler; protected set => carSfxHandler = value; }
 
 
-    public Rigidbody2D CarRigidbody2D { get => carRigidbody2D; }
-    public Collider2D CarCollider { get => carCollider; }
-    public CarSFXHandler CarSfxHandler { get => carSfxHandler; }
+
+
+
+
 
     #endregion
-    //Awake is called when the script instance is being loaded.
+
     void Awake()
     {
-        carRigidbody2D = GetComponent<Rigidbody2D>();
-        carCollider = GetComponentInChildren<Collider2D>();
-        carSfxHandler = GetComponent<CarSFXHandler>();
+        CarRigidbody2D = GetComponent<Rigidbody2D>();
+        CarCollider = GetComponent<Collider2D>();
+        CarSfxHandler = GetComponent<CarSFXHandler>();
     }
 
     void Start()
@@ -89,63 +93,63 @@ public class TopDownCarController : MonoBehaviour
 
     void ApplyEngineForce()
     {
-        //Don't let the player brake while in the air, but we still allow some drag so it can be slowed slightly. 
+
         if (IsJumping && AccelerationInput < 0)
             AccelerationInput = 0;
 
-        //Apply drag if there is no accelerationInput so the car stops when the player lets go of the accelerator
+   
         if (AccelerationInput == 0)
             CarRigidbody2D.drag = Mathf.Lerp(CarRigidbody2D.drag, 3.0f, Time.fixedDeltaTime * 3);
         else CarRigidbody2D.drag = 0;
 
-        //Caculate how much "forward" we are going in terms of the direction of our velocity
+   
         VelocityVsUp = Vector2.Dot(transform.up, CarRigidbody2D.velocity);
 
-        //Limit so we cannot go faster than the max speed in the "forward" direction
+  
         if (VelocityVsUp > MaxSpeed && AccelerationInput > 0)
             return;
 
-        //Limit so we cannot go faster than the 50% of max speed in the "reverse" direction
+
         if (VelocityVsUp < -MaxSpeed * 0.5f && AccelerationInput < 0)
             return;
 
-        //Limit so we cannot go faster in any direction while accelerating
+     
         if (CarRigidbody2D.velocity.sqrMagnitude > MaxSpeed * MaxSpeed && AccelerationInput > 0 && !IsJumping)
             return;
 
-        //Create a force for the engine
+  
         Vector2 engineForceVector = transform.up * AccelerationInput * AccelerationFactor;
 
-        //Apply force and pushes the car forward
+        
         CarRigidbody2D.AddForce(engineForceVector, ForceMode2D.Force);
     }
 
     void ApplySteering()
     {
-        //Limit the cars ability to turn when moving slowly
+     
         float minSpeedBeforeAllowTurningFactor = (CarRigidbody2D.velocity.magnitude / 2);
         minSpeedBeforeAllowTurningFactor = Mathf.Clamp01(minSpeedBeforeAllowTurningFactor);
 
-        //Update the rotation angle based on input
+
         RotationAngle -= SteeringInput * TurnFactor * minSpeedBeforeAllowTurningFactor;
 
-        //Apply steering by rotating the car object
+
         CarRigidbody2D.MoveRotation(RotationAngle);
     }
 
     void KillOrthogonalVelocity()
     {
-        //Get forward and right velocity of the car
+
         Vector2 forwardVelocity = transform.up * Vector2.Dot(CarRigidbody2D.velocity, transform.up);
         Vector2 rightVelocity = transform.right * Vector2.Dot(CarRigidbody2D.velocity, transform.right);
 
-        //Kill the orthogonal velocity (side velocity) based on how much the car should drift. 
+
         CarRigidbody2D.velocity = forwardVelocity + rightVelocity * DriftFactor;
     }
 
     float GetLateralVelocity()
     {
-        //Returns how how fast the car is moving sideways. 
+
         return Vector2.Dot(transform.right, CarRigidbody2D.velocity);
     }
 
@@ -157,14 +161,13 @@ public class TopDownCarController : MonoBehaviour
         if (IsJumping)
             return false;
 
-        //Check if we are moving forward and if the player is hitting the brakes. In that case the tires should screech.
+  
         if (AccelerationInput < 0 && VelocityVsUp > 0)
         {
             isBraking = true;
             return true;
         }
 
-        //If we have a lot of side movement then the tires should be screeching
         if (Mathf.Abs(GetLateralVelocity()) > 4.0f)
             return true;
 

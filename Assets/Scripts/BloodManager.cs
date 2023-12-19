@@ -8,11 +8,22 @@ public class BloodManager : MonoBehaviour
 
 
 
-    private int bloodAmount;
-    private int MaxbloodAmount = 100;
-    [SerializeField] private bool draining;
-    public int BloodAmount { get => bloodAmount; }
-    public bool Draining { get => draining; set => draining = value; }
+    private int _bloodAmount;
+    [SerializeField]
+    private int _maxbloodAmount = 100;
+    private bool _draining;
+    [SerializeField]
+    private float _drainSpeed = 0.5f;
+    [SerializeField]
+    private int _bloodDrainPortion = 1;
+    private WaitForSeconds WaitYield;
+
+    public float DrainSpeed { get => _drainSpeed; private set => _drainSpeed = value; }
+    public int BloodDrainPortion { get => _bloodDrainPortion; private set => _bloodDrainPortion = value; }
+    public int BloodAmount { get => _bloodAmount; private set => _bloodAmount = value; }
+    public int MaxbloodAmount { get => _maxbloodAmount ; set => _maxbloodAmount = value + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Fuel]; }
+    public bool Draining { get => _draining; private set => _draining = value; }
+
 
     private void Awake()
     {
@@ -27,18 +38,23 @@ public class BloodManager : MonoBehaviour
         }
 
 
-     
-        bloodAmount = 100;
-        
+   
 
+    }
+
+
+    private void Start()
+    {
+        BloodAmount = MaxbloodAmount;
+        WaitYield= new WaitForSeconds(DrainSpeed);
     }
 
 
     public void AddBlood(int amount)
     {
-        bloodAmount += amount;
-        bloodAmount = Math.Clamp(bloodAmount, 1, MaxbloodAmount);
-        HealthBar.Instance.SetBlood(bloodAmount);
+        BloodAmount += amount;
+        BloodAmount = Math.Clamp(BloodAmount, 1, MaxbloodAmount);
+        HealthBar.Instance.SetBlood(BloodAmount);
     }
 
 
@@ -46,11 +62,11 @@ public class BloodManager : MonoBehaviour
 
     public void RemoveBlood(int amount)
     {
-        bloodAmount -= amount;
-        bloodAmount = Math.Clamp(bloodAmount, 0, MaxbloodAmount);
+        BloodAmount -= amount;
+        BloodAmount = Math.Clamp(BloodAmount, 0, MaxbloodAmount);
 
-        HealthBar.Instance.SetBlood(bloodAmount);
-        if (bloodAmount <= 0)
+        HealthBar.Instance.SetBlood(BloodAmount);
+        if (BloodAmount <= 0)
         {
             GameManager.instance.OnRaceCompleted();
         }
@@ -58,28 +74,28 @@ public class BloodManager : MonoBehaviour
 
     public void StartDrain()
     {
-        draining = true;
+        Draining = true;
         StartCoroutine(Drain());
     }
 
     private IEnumerator Drain()
     {
-        while (bloodAmount > 0 && draining == true)
+        while (BloodAmount > 0 && Draining == true)
         {
-            bloodAmount--;
-            HealthBar.Instance.SetBlood(bloodAmount);
-            yield return new WaitForSeconds(0.5f);
+            RemoveBlood(BloodDrainPortion);
+
+            HealthBar.Instance.SetBlood(BloodAmount);
+            yield return WaitYield;
         }
-        if (draining == true)
-        {
-            GameManager.instance.OnRaceCompleted();
-        }
+
+        GameManager.instance.OnRaceCompleted();
+        
 
     }
 
     public void StopDrain()
     {
-        draining = false;
+        Draining = false;
 
     }
 

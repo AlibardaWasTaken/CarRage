@@ -66,7 +66,7 @@ Transform:
   m_GameObject: {fileID: 243744000422069506}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 14.014352, y: -1.1100292, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 2.8, y: 2.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 243744000689721196}
@@ -186,10 +186,7 @@ MonoBehaviour:
   steeringInput: 0
   rotationAngle: 0
   velocityVsUp: 0
-  carRigidbody2D: {fileID: 0}
-  carCollider: {fileID: 0}
-  carSfxHandler: {fileID: 0}
-  health: 2
+  _health: 2
 --- !u!114 &243744000422069511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5236,7 +5233,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a10d47f4e1654564c883852f974a56e2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5db14005f49799f4eae2db187e3c491e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -15746,8 +15743,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4044744628358530067}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0132, y: 0, z: 0}
-  m_LocalScale: {x: 0.931968, y: 1, z: 1}
+  m_LocalPosition: {x: 0.029, y: 0, z: 0}
+  m_LocalScale: {x: 0.8110812, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 243744000422069505}
@@ -16299,9 +16296,10 @@ PolygonCollider2D:
       - {x: -0.599226, y: 0.814134}
       - {x: -0.59216726, y: 0.37193808}
       - {x: -0.59671164, y: -0.5856557}
-      - {x: -0.5850672, y: -0.9083034}
-      - {x: -0.4671631, y: -1.0407474}
-      - {x: 0.48773146, y: -1.0365242}
+      - {x: -0.5288746, y: -1.0319275}
+      - {x: -0.46154377, y: -1.3048533}
+      - {x: 0.031163553, y: -1.3253778}
+      - {x: 0.47087395, y: -1.2950109}
       - {x: 0.61101925, y: -0.8900417}
 --- !u!114 &6368656526583031623
 MonoBehaviour:

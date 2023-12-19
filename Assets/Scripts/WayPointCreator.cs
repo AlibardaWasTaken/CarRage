@@ -19,7 +19,7 @@ public class WayPointCreator : MonoBehaviour
     void Awake()
     {
         lineRenderer = this.GetComponent<LineRenderer>();
-        createdWaypoints = new WaypointNode[lineRenderer.positionCount-1];
+        createdWaypoints = new WaypointNode[lineRenderer.positionCount];
 
         CreatePoints();
         AssingWaypointsDestinations();
@@ -30,7 +30,7 @@ public class WayPointCreator : MonoBehaviour
     public void CreatePoints()
     {
         
-        for (int i = 0; i < lineRenderer.positionCount-1; i++)
+        for (int i = 0; i < lineRenderer.positionCount; i++)
         {
            var Dotposition = lineRenderer.GetPosition(i);
             Dotposition.z = 0;

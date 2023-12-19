@@ -4,29 +4,9 @@ using UnityEngine;
 
 public class HumanSpawner : ObjectSpawner
 {
-    [SerializeField]
-    private int humanLimiter = 100;
-
-    private int humanAlive = 0;
-
-    protected override bool Condition()
+    public override int GetLimiter()
     {
-        return (humanLimiter > humanAlive);
+        return limiter + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.MaxHumans];
     }
-
-
-    protected override void OnSpawn(GameObject SpawnedObj)
-    {
-        humanAlive++;
-        SpawnedObj.GetComponent<HumanNpc>().onDeath += RemoveHumanAmount;
-    }
-
-
-    public void RemoveHumanAmount()
-    {
-        humanAlive--;
-    }
-
-
 
 }

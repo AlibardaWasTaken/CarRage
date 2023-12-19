@@ -6,13 +6,13 @@ public class TopDownPlayerCar : TopDownCarController, IHittable
 {
 
 
-    [SerializeField] private ParticleSystem BloodParticleSystem;
+    [SerializeField] private ParticleSystem _bloodParticleSystem;
+    private bool IsInvincibleTime;
 
 
 
 
-
-    public ParticleSystem BloodParticleSystem1 { get => BloodParticleSystem; }
+    public ParticleSystem BloodParticleSystem { get => _bloodParticleSystem; }
 
 
     public void Eat()
@@ -32,15 +32,35 @@ public class TopDownPlayerCar : TopDownCarController, IHittable
             StartCoroutine(JumpCo(jumpHeightScale, jumpPushScale, carColliderLayerBeforeJump));
     }
 
+
+
     public void OnHit()
     {
-        var randchance = Random.Range(0, 2);
-        if (randchance == 1)
+        if (IsInvincibleTime == false)
         {
-            BloodManager.Instance.RemoveBlood(1);
+            IsInvincibleTime = true;
+            var randHit = Random.Range(1, 7);
+            StartCoroutine(InvicibilityTime(randHit));
         }
 
+
+
+   
+
     }
+
+    private IEnumerator InvicibilityTime(int damage, float time = 0.2f)
+    {
+        
+
+        BloodManager.Instance.RemoveBlood(Mathf.Clamp(damage - GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Armor], 1, 99));
+
+        CarSpriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(time);
+        CarSpriteRenderer.color = Color.white;
+        IsInvincibleTime = false;
+    }
+
 
     private IEnumerator JumpCo(float jumpHeightScale, float jumpPushScale, int carColliderLayerBeforeJump)
     {
