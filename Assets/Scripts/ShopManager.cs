@@ -7,8 +7,7 @@ using TMPro;
 public class ShopManager : MonoBehaviour
 {
     public static ShopManager instance = null;
-    [SerializeField]
-    private List<ShopItemScritpableObject> _Items = new List<ShopItemScritpableObject>();
+
 
 
     [SerializeField]
@@ -20,7 +19,7 @@ public class ShopManager : MonoBehaviour
 
     public GameObject contentObject;
 
-    public List<ShopItemScritpableObject> Items { get => _Items; set => _Items = value; }
+
 
 
     public GameObject UpgradePrefab { get => _UpgradePrefab; }
@@ -55,7 +54,7 @@ public class ShopManager : MonoBehaviour
 
     private void CreateUpgradesPrefabs()
     {
-        foreach (var itemScritpableObject in Items)
+        foreach (var itemScritpableObject in GameManager.instance.ShopItems)
         {
            var obj = Instantiate(UpgradePrefab, contentObject.transform);
             obj.GetComponent<ShopGameSlot>().Init(itemScritpableObject);

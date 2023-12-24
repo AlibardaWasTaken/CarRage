@@ -30,7 +30,7 @@ public class CountDownUIHandler : MonoBehaviour
                 countDownText.text = counter.ToString();
             else
             {
-                countDownText.text = "TIME TO EAT!";
+                countDownText.text = "Время Жрать";
 
                 GameManager.instance.OnRaceStart();
 

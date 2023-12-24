@@ -50,11 +50,26 @@ public abstract class ObjectSpawner : MonoBehaviour
         PooledYield = new WaitForSeconds(SpawnInterval);
         objectPool = new ObjectPool<GameObject>(createFunc: CreateObject, actionOnGet: OnPoolGet, actionOnRelease: OnPoolRelease, actionOnDestroy: OnPoolDestroy, maxSize: GetLimiter());
 
+        GameManager.instance.OnGameStateChanged += OnGameStateChanged;
+
         OnStart();
 
         
         StartCoroutine(SpawnPrefabsRandomly());
     }
+
+    private void OnGameStateChanged(GameStates obj)
+    {
+        if (obj == GameStates.raceOver)
+            IsEnabled = false;
+    }
+
+
+    void OnDestroy()
+    {
+        GameManager.instance.OnGameStateChanged -= OnGameStateChanged;
+    }
+
 
     protected virtual void OnStart()
     {

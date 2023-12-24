@@ -82,7 +82,7 @@ public class TopDownPlayerCar : TopDownCarController, IHittable
         CarShadowRenderer.sortingLayerName = "Flying";
 
         //Push the object forward as we passed a jump
-        CarRigidbody2D.AddForce(CarRigidbody2D.velocity.normalized * jumpPushScale * 10, ForceMode2D.Impulse);
+        CarRigidbody2D.AddForce(10 * jumpPushScale * CarRigidbody2D.velocity.normalized, ForceMode2D.Impulse);
 
         while (IsJumping)
         {
@@ -91,13 +91,13 @@ public class TopDownPlayerCar : TopDownCarController, IHittable
             jumpCompletedPercentage = Mathf.Clamp01(jumpCompletedPercentage);
 
             //Take the base scale of 1 and add how much we should increase the scale with. 
-            CarSpriteRenderer.transform.localScale = Vector3.one + Vector3.one * JumpCurve.Evaluate(jumpCompletedPercentage) * jumpHeightScale;
+            CarSpriteRenderer.transform.localScale = Vector3.one + JumpCurve.Evaluate(jumpCompletedPercentage) * jumpHeightScale * Vector3.one;
 
             //Change the shadow scale also but make it a bit smaller. In the real world this should be the opposite, the higher an object gets the larger its shadow gets but this looks better in my opinion
             CarShadowRenderer.transform.localScale = CarSpriteRenderer.transform.localScale * 0.75f;
 
             //Offset the shadow a bit. This is not 100% correct either but works good enough in our game. 
-            CarShadowRenderer.transform.localPosition = new Vector3(1, -1, 0.0f) * 3 * JumpCurve.Evaluate(jumpCompletedPercentage) * jumpHeightScale;
+            CarShadowRenderer.transform.localPosition = 3 * JumpCurve.Evaluate(jumpCompletedPercentage) * jumpHeightScale * new Vector3(1, -1, 0.0f);
 
             //When we reach 100% we are done
             if (jumpCompletedPercentage == 1.0f)

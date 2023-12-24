@@ -14,7 +14,7 @@ public class InGameMenuUIHandler : MonoBehaviour
 
         canvas.enabled = false;
 
-        //Hook up events
+    
         GameManager.instance.OnGameStateChanged += OnGameStateChanged;
     }
 
@@ -33,10 +33,9 @@ public class InGameMenuUIHandler : MonoBehaviour
         canvas.enabled = true;
     }
 
-    //Events 
-    void OnGameStateChanged(GameManager gameManager)
+    void OnGameStateChanged(GameStates state)
     {
-        if (GameManager.instance.GetGameState() == GameStates.raceOver)
+        if (state == GameStates.raceOver)
         {
             StartCoroutine(ShowMenuCO());
         }
@@ -44,7 +43,6 @@ public class InGameMenuUIHandler : MonoBehaviour
 
     void OnDestroy()
     {
-        //Unhook events
         GameManager.instance.OnGameStateChanged -= OnGameStateChanged;
     }
 

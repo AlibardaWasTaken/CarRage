@@ -21,7 +21,7 @@ public static class SaveInitiator
     {
         var LoadedJsonHolder = PlayerPrefs.GetString(SaveKey);
         Debug.Log("get - " + LoadedJsonHolder);
-        var Holder = (UpgradeValueHolder)JsonUtility.FromJson(LoadedJsonHolder, typeof(UpgradeValueHolder));
+        var Holder = JsonUtility.FromJson<UpgradeValueHolder>(LoadedJsonHolder);
         return Holder;
     }
 

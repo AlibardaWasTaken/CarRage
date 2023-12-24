@@ -8,13 +8,14 @@ public class ShopGameSlot : MonoBehaviour
     public TextMeshProUGUI Cost;
 
     private ShopItemScritpableObject ShopItem;
-
+    private int calculatedCost;
     public void Init(ShopItemScritpableObject InitItem)
     {
         Name.text = InitItem.Name;
-        Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[InitItem.GUIDContainer.Guid]] + 1).ToString() + " Óð. ";
+        Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[InitItem.GUIDContainer.Guid]] +1).ToString() + " Óð. ";
         Cost.text = InitItem.CalculateCost().ToString();
         ShopItem = InitItem;
+        calculatedCost = ShopItem.CalculateCost();
     }
 
 
@@ -22,15 +23,16 @@ public class ShopGameSlot : MonoBehaviour
     {
 
         Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]] + 1).ToString() + " Óð. ";
-        Cost.text = ShopItem.CalculateCost().ToString();
+        calculatedCost = ShopItem.CalculateCost();
+        Cost.text = calculatedCost.ToString();
     }
 
 
     public void BuyUpgrade()
     {
-        var cost = ShopItem.CalculateCost();
+       
 
-        if (cost > GameManager.ValueHolder.Points)
+        if (calculatedCost > GameManager.ValueHolder.Points)
         {
             Debug.Log("Error, nety deneg");
             return;
@@ -45,12 +47,12 @@ public class ShopGameSlot : MonoBehaviour
 
 
         Debug.Log("Sold");
-        GameManager.ValueHolder.Points -= cost;
+        GameManager.ValueHolder.Points -= calculatedCost;
         GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]] += 1;
-        foreach (var ValuesPair in ShopItem.UpgradeEnumsVal)
-        {
-            GameManager.ValueHolder.EnumsValuesDictionary[ValuesPair.Enum] += ValuesPair.val;
-        }
+        //foreach (var ValuesPair in ShopItem.UpgradeEnumsVal)
+        //{
+        //    GameManager.ValueHolder.EnumsValuesDictionary[ValuesPair.Enum] += ValuesPair.val;
+        //}
         GameManager.SaveData();
         Refresh();
         ShopManager.RefreshPointsText();

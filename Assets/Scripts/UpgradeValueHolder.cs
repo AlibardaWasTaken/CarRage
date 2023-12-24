@@ -20,6 +20,7 @@ public class UpgradeValueHolder : ISerializationCallbackReceiver
     public void OnBeforeSerialize()
     {
         _upgradesLevels.Clear();
+        _upgradeCount.Clear();
         _points = Points;
         foreach (KeyValuePair<ShopItemScritpableObject, int> kvp in UpgradesLevels)
         {
@@ -31,9 +32,22 @@ public class UpgradeValueHolder : ISerializationCallbackReceiver
     }
 
 
+    public void AddEnums()
+    {
+        Debug.Log("AddingEnumsToValUpg");
+        foreach (var Upg in (UpgradeEnums[])Enum.GetValues(typeof(UpgradeEnums)))
+        {
+            EnumsValuesDictionary.Add(Upg, 0);
+        }
+    }
+
+
+
     public void OnAfterDeserialize()
     {
-       
+        AddEnums();
+
+
 
         for (int i = 0; i < _upgradeCount.Count; i++)
         {

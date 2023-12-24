@@ -18,7 +18,9 @@ public class ShopItemScritpableObject : ScriptableObject, ISerializationCallback
 
     public int CalculateCost()
     {
-        return (int)(InitialCost + Mathf.Pow(CostMult * GameManager.ValueHolder.UpgradesLevels[this], 2));
+        var cost = (int)(InitialCost + CostMult * GameManager.ValueHolder.UpgradesLevels[this]);
+       // Debug.Log(cost);
+        return cost;
     }
 
 
@@ -28,6 +30,7 @@ public class ShopItemScritpableObject : ScriptableObject, ISerializationCallback
 
     public void OnAfterDeserialize()
     {
+        Debug.Log("DESERIALIZE " + GUIDContainer.Guid);
         RuntimeLookup[GUIDContainer.Guid] = this;
     }
 }
@@ -62,11 +65,13 @@ public struct GUIDContainer : ISerializationCallbackReceiver
 
     public void OnAfterDeserialize()
     {
+        //Debug.Log("I am dping spm");
         if (_serializedGuid != null && !string.IsNullOrEmpty(_serializedGuid))
         {
             _guid = new System.Guid(_serializedGuid);
+            return;
         }
-
+        _guid = Guid.NewGuid();
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     //States
-    GameStates gameState = GameStates.countDown;
+   private GameStates gameState = GameStates.countDown;
 
     //Time
    private float raceStartedTime = 0;
@@ -21,16 +22,20 @@ public class GameManager : MonoBehaviour
 
 
 
- 
-
+    [SerializeField]
+    private List<ShopItemScritpableObject> _shopItems = new List<ShopItemScritpableObject>();
+    public List<ShopItemScritpableObject> ShopItems { get => _shopItems; set => _shopItems = value; }
 
     public static UpgradeValueHolder ValueHolder;
+
+
+
 
     //Driver information
     private List<DriverInfo> driverInfoList = new List<DriverInfo>();
 
     //Events
-    public event Action<GameManager> OnGameStateChanged;
+    public event Action<GameStates> OnGameStateChanged;
 
 
    
@@ -49,7 +54,11 @@ public class GameManager : MonoBehaviour
         }
 
 
+        InitSave();
+
     }
+
+
 
 
 
@@ -63,9 +72,16 @@ public class GameManager : MonoBehaviour
     {
         var values = SaveInitiator.GetValues();
 
+
+
+
+
+
+
         if (values != null)
         {
             ValueHolder = values;
+
 
         }
         else
@@ -74,32 +90,32 @@ public class GameManager : MonoBehaviour
             ValueHolder = new UpgradeValueHolder();
 
 
-            foreach (var slot in ShopManager.instance.Items)
-            {
+
+
+
+
+            ValueHolder.AddEnums();
+
+
+        }
+
+        foreach (var slot in ShopItems)
+        {
+            if (!ValueHolder.UpgradesLevels.ContainsKey(slot))
                 ValueHolder.UpgradesLevels.Add(slot, 0);
-            }
-
-            foreach (var Upg in (UpgradeEnums[])Enum.GetValues(typeof(UpgradeEnums)))
-            {
-                ValueHolder.EnumsValuesDictionary.Add(Upg, 0);
-            }
-
-
-
-            foreach (KeyValuePair<UpgradeEnums,int> item in ValueHolder.EnumsValuesDictionary)
-            {
-                Debug.Log(item.Key);
-            }
         }
 
 
-       // ValueHolder.Points += 99999;
+
+
+
+
+        ValueHolder.Points += 99999;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        InitSave();
+       
         driverInfoList.Add(new DriverInfo(1, "P1", 0, false));
 
     }
@@ -130,7 +146,7 @@ public class GameManager : MonoBehaviour
             gameState = newGameState;
 
             //Invoke game state change event
-            OnGameStateChanged?.Invoke(this);
+            OnGameStateChanged?.Invoke(gameState);
         }
     }
 
