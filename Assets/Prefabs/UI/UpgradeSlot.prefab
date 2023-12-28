@@ -911,6 +911,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88d8f915b9501924eb29c5c49a10eb80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: {fileID: 8169881114762486863}
-  Level: {fileID: 7166060099750360169}
-  Cost: {fileID: 7667041621076625297}
+  _name: {fileID: 8169881114762486863}
+  _level: {fileID: 7166060099750360169}
+  _cost: {fileID: 7667041621076625297}

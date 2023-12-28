@@ -53,17 +53,32 @@ public class UpgradeValueHolder : ISerializationCallbackReceiver
         {
             UpgradesLevels[(ShopItemScritpableObject.RuntimeLookup[_upgradesLevels[i].Guid])] =
                 _upgradeCount[i];
-
-            foreach (var ValuesPair in ShopItemScritpableObject.RuntimeLookup[_upgradesLevels[i].Guid].UpgradeEnumsVal)
-            {
-                EnumsValuesDictionary[ValuesPair.Enum] += ValuesPair.val;
-            }
             
         }
 
         Points = _points;
+
+        UpdateEnums();
     }
 
+    private void UpdateEnums()
+    {
+        foreach (var kvp in UpgradesLevels)
+        {
+            for (int i = 0; i < kvp.Value; i++)
+            {
+                foreach (var EnumPair in kvp.Key.UpgradeEnumsVal)
+                {
+                    EnumsValuesDictionary[EnumPair.Enum] += EnumPair.val;
+                }
+            }
+        }
+
+        //foreach (var ValuesPair in ShopItemScritpableObject.RuntimeLookup[_upgradesLevels[i].Guid].UpgradeEnumsVal)
+        //{
+        //    EnumsValuesDictionary[ValuesPair.Enum] += ValuesPair.val;
+        //}
+    }
 
 
 }

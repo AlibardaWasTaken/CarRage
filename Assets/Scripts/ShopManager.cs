@@ -17,6 +17,8 @@ public class ShopManager : MonoBehaviour
     private TextMeshProUGUI _PointsText;
 
 
+
+
     public GameObject contentObject;
 
 

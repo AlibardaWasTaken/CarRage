@@ -25,20 +25,18 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<ShopItemScritpableObject> _shopItems = new List<ShopItemScritpableObject>();
     public List<ShopItemScritpableObject> ShopItems { get => _shopItems; set => _shopItems = value; }
+  
 
-    public static UpgradeValueHolder ValueHolder;
+    private static UpgradeValueHolder _valueHolder;
 
 
+    private static int _earnedForRun;
 
-
-    //Driver information
-    private List<DriverInfo> driverInfoList = new List<DriverInfo>();
-
-    //Events
     public event Action<GameStates> OnGameStateChanged;
 
 
-   
+    public static int EarnedForRun { get => _earnedForRun; private set => _earnedForRun = value; }
+    public static UpgradeValueHolder ValueHolder { get => _valueHolder; private set => _valueHolder = value; }
 
     private void Awake()
     {
@@ -110,18 +108,13 @@ public class GameManager : MonoBehaviour
 
 
 
-        ValueHolder.Points += 99999;
+        ValueHolder.Points += 999;
     }
 
-    void Start()
-    {
-       
-        driverInfoList.Add(new DriverInfo(1, "P1", 0, false));
-
-    }
 
     public static void AddPoints(int point)
     {
+        EarnedForRun += point;
         ValueHolder.Points += point;
     }
 
@@ -129,7 +122,8 @@ public class GameManager : MonoBehaviour
     private void LevelStart()
     {
         gameState = GameStates.countDown;
-        HealthBar.Instance.SetBloodHealth(100);
+        EarnedForRun = 0;
+        HealthBar.Instance.SetBloodHealth(BloodManager.Instance.MaxbloodAmount);
         Debug.Log("Level started");
     }
 
@@ -145,7 +139,7 @@ public class GameManager : MonoBehaviour
         {
             gameState = newGameState;
 
-            //Invoke game state change event
+
             OnGameStateChanged?.Invoke(gameState);
         }
     }
@@ -168,48 +162,16 @@ public class GameManager : MonoBehaviour
 
     }
 
-    //Driver information handling
-    public void ClearDriversList()
+
+    public void RestartRace()
     {
-        driverInfoList.Clear();
+        if (gameState == GameStates.raceOver) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 
-    public void AddDriverToList(int playerNumber, string name, int carUniqueID, bool isAI)
-    {
-        driverInfoList.Add(new DriverInfo(playerNumber, name, carUniqueID, isAI));
-    }
 
-    public void SetDriversLastRacePosition(int playerNumber, int position)
-    {
-        DriverInfo driverInfo = FindDriverInfo(playerNumber);
-        driverInfo.lastRacePosition = position;
-    }
 
-    public void AddPointsToChampionship(int playerNumber, int points)
-    {
-        DriverInfo driverInfo = FindDriverInfo(playerNumber);
 
-        driverInfo.championshipPoints += points;
-    }
-
-    DriverInfo FindDriverInfo(int playerNumber)
-    {
-        foreach (DriverInfo driverInfo in driverInfoList)
-        {
-            if (playerNumber == driverInfo.playerNumber)
-                return driverInfo;
-        }
-
-        Debug.LogError($"FindDriverInfoBasedOnDriverNumber failed to find driver for player number {playerNumber}");
-
-        return null;
-    }
-
-    public List<DriverInfo> GetDriverList()
-    {
-        return driverInfoList;
-    }
 
     public void OnRaceStart()
     {

@@ -3,12 +3,20 @@ using UnityEngine;
 
 public class ShopGameSlot : MonoBehaviour
 {
-    public TextMeshProUGUI Name;
-    public TextMeshProUGUI Level;
-    public TextMeshProUGUI Cost;
+    [SerializeField]
+    private TextMeshProUGUI _name;
+    [SerializeField]
+    private TextMeshProUGUI _level;
+    [SerializeField]
+    private TextMeshProUGUI _cost;
 
     private ShopItemScritpableObject ShopItem;
     private int calculatedCost;
+
+    public TextMeshProUGUI Name { get => _name;}
+    public TextMeshProUGUI Level { get => _level; }
+    public TextMeshProUGUI Cost { get => _cost; }
+
     public void Init(ShopItemScritpableObject InitItem)
     {
         Name.text = InitItem.Name;

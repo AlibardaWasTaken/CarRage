@@ -1,12 +1,18 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using YG;
 
 public class InGameMenuUIHandler : MonoBehaviour
 {
-    //Other components
-    Canvas canvas;
+
+    private Canvas canvas;
+
+
+    [SerializeField]
+    private TextMeshProUGUI _earnedText;
+
+    public TextMeshProUGUI EarnedText { get => _earnedText; }
 
     private void Awake()
     {
@@ -18,11 +24,16 @@ public class InGameMenuUIHandler : MonoBehaviour
         GameManager.instance.OnGameStateChanged += OnGameStateChanged;
     }
 
-
-    public void OnRaceAgain()
+    // Вызов кнопкой, не удаляй
+    public void RequestRestart()
     {
-      
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.instance.RestartRace();
+    }
+
+   
+    public void RefreshEarned()
+    {
+        EarnedText.text = string.Format("За заезд получено : {0}", GameManager.EarnedForRun);
     }
 
 
@@ -33,10 +44,11 @@ public class InGameMenuUIHandler : MonoBehaviour
         canvas.enabled = true;
     }
 
-    void OnGameStateChanged(GameStates state)
+    private void OnGameStateChanged(GameStates state)
     {
         if (state == GameStates.raceOver)
         {
+            RefreshEarned();
             StartCoroutine(ShowMenuCO());
         }
     }

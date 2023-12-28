@@ -21,7 +21,7 @@ public class BloodManager : MonoBehaviour
     public float DrainSpeed { get => _drainSpeed; private set => _drainSpeed = value; }
     public int BloodDrainPortion { get => _bloodDrainPortion; private set => _bloodDrainPortion = value; }
     public int BloodAmount { get => _bloodAmount; private set => _bloodAmount = value; }
-    public int MaxbloodAmount { get => _maxbloodAmount ; set => _maxbloodAmount = value + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Fuel]; }
+    public int MaxbloodAmount { get => _maxbloodAmount + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Fuel]; set => _maxbloodAmount = value + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Fuel]; }
     public bool Draining { get => _draining; private set => _draining = value; }
 
 
@@ -47,6 +47,7 @@ public class BloodManager : MonoBehaviour
     {
         BloodAmount = MaxbloodAmount;
         WaitYield= new WaitForSeconds(DrainSpeed);
+        Debug.Log(GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Fuel]);
     }
 
 
@@ -75,6 +76,7 @@ public class BloodManager : MonoBehaviour
     public void StartDrain()
     {
         Draining = true;
+        Debug.Log("Max " + MaxbloodAmount);
         StartCoroutine(Drain());
     }
 
