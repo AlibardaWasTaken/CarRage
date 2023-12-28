@@ -19,6 +19,6 @@ MonoBehaviour:
     \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043B\u044E\u0434\u0435\u0439"
   UpgradeEnumsVal:
   - Enum: 1
-    val: 10
+    val: 5
   GUIDContainer:
-    _serializedGuid: 
+    _serializedGuid: a29dca0c-8ae0-499e-af59-31f0f72e3495

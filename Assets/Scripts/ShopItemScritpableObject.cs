@@ -30,7 +30,7 @@ public class ShopItemScritpableObject : ScriptableObject, ISerializationCallback
 
     public void OnAfterDeserialize()
     {
-        Debug.Log("DESERIALIZE " + GUIDContainer.Guid);
+       // Debug.Log("DESERIALIZE " + GUIDContainer.Guid);
         RuntimeLookup[GUIDContainer.Guid] = this;
     }
 }

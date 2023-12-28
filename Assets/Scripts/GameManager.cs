@@ -192,6 +192,8 @@ public class GameManager : MonoBehaviour
         ShopManager.RefreshPointsText();
 
         ChangeGameState(GameStates.raceOver);
+
+        SaveData();
     }
 
 

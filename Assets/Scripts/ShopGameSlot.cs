@@ -20,7 +20,7 @@ public class ShopGameSlot : MonoBehaviour
     public void Init(ShopItemScritpableObject InitItem)
     {
         Name.text = InitItem.Name;
-        Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[InitItem.GUIDContainer.Guid]] +1).ToString() + " Óð. ";
+        Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[InitItem.GUIDContainer.Guid]]).ToString() + " Óð. ";
         Cost.text = InitItem.CalculateCost().ToString();
         ShopItem = InitItem;
         calculatedCost = ShopItem.CalculateCost();
@@ -30,7 +30,7 @@ public class ShopGameSlot : MonoBehaviour
     public void Refresh()
     {
 
-        Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]] + 1).ToString() + " Óð. ";
+        Level.text = (GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]]).ToString() + " Óð. ";
         calculatedCost = ShopItem.CalculateCost();
         Cost.text = calculatedCost.ToString();
     }
@@ -46,7 +46,7 @@ public class ShopGameSlot : MonoBehaviour
             return;
         }
 
-        if( GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]] > ShopItem.MaxLvl)
+        if( GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]] >= ShopItem.MaxLvl)
         {
             Debug.Log("Error, max upg");
             return;
@@ -57,10 +57,7 @@ public class ShopGameSlot : MonoBehaviour
         Debug.Log("Sold");
         GameManager.ValueHolder.Points -= calculatedCost;
         GameManager.ValueHolder.UpgradesLevels[ShopItemScritpableObject.RuntimeLookup[ShopItem.GUIDContainer.Guid]] += 1;
-        //foreach (var ValuesPair in ShopItem.UpgradeEnumsVal)
-        //{
-        //    GameManager.ValueHolder.EnumsValuesDictionary[ValuesPair.Enum] += ValuesPair.val;
-        //}
+
         GameManager.SaveData();
         Refresh();
         ShopManager.RefreshPointsText();

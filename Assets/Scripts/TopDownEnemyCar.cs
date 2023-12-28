@@ -4,16 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class TopDownEnemyCar : TopDownCarController, Iinteractable
+public class TopDownEnemyCar : TopDownCarController, Iinteractable, IPoolLinked
 {
-    
+
+    ObjectPool<GameObject> IPoolLinked.LinkedPool { get; set; }
+
+
+    public GameObject ThisGameObject()
+    {
+        return this.gameObject;
+    }
+
+
 
     [SerializeField]
     private int _health = 2;
     
     private bool AnimatingHit = false;
 
-    private ObjectPool<GameObject> LinkedPool;
+
 
 
 
@@ -29,33 +38,27 @@ public class TopDownEnemyCar : TopDownCarController, Iinteractable
 
     public void Interact()
     {
-        Damage(1 + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Crusher]);
-    }
-
-
-    public void LinkPool(ObjectPool<GameObject> ToLink)
-    {
-        LinkedPool = ToLink;
-    }
-
-
-    private void ReturnPool()
-    {
-        if (LinkedPool != null)
-        {
-            LinkedPool.Release(this.gameObject);
-            return;
-        }
-
-
-        Destroy(this.gameObject);
+        DoDamage(1 + GameManager.ValueHolder.EnumsValuesDictionary[UpgradeEnums.Crusher]);
     }
 
 
 
-    public void Damage(int damage)
+
+
+
+
+
+    private IEnumerator CarHitted()
     {
-        Health -= damage;
+        CarSpriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        CarSpriteRenderer.color = Color.white;
+        AnimatingHit = false;
+    }
+
+    public override void DoDamage(int amount)
+    {
+        Health -= amount;
         if (AnimatingHit == false)
         {
             AnimatingHit = true;
@@ -68,13 +71,5 @@ public class TopDownEnemyCar : TopDownCarController, Iinteractable
             CommonSoundManager.Instance.ExpContainer.PlayRandom();
             Destroy(this.gameObject);
         }
-    }
-
-    private IEnumerator CarHitted()
-    {
-        CarSpriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.2f);
-        CarSpriteRenderer.color = Color.white;
-        AnimatingHit = false;
     }
 }

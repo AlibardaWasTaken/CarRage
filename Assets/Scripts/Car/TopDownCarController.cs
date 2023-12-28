@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class TopDownCarController : MonoBehaviour
+public abstract class TopDownCarController : MonoBehaviour
 {
     [Header("Car settings")]
     [SerializeField] private float driftFactor = 0.95f;
@@ -91,6 +91,7 @@ public class TopDownCarController : MonoBehaviour
 
     internal virtual void OnFixedUpdate() { }
 
+    public abstract void DoDamage(int amount);
     void ApplyEngineForce()
     {
 

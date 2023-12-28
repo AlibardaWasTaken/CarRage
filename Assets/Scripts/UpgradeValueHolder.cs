@@ -57,7 +57,6 @@ public class UpgradeValueHolder : ISerializationCallbackReceiver
         }
 
         Points = _points;
-
         UpdateEnums();
     }
 

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Armor
   m_EditorClassIdentifier: 
   InitialCost: 50
-  CostMult: 1.5
+  CostMult: 2
   MaxLvl: 15
   Name: "\u0411\u0440\u043E\u043D\u044F \u043C\u0430\u0448\u0438\u043D\u044B"
   UpgradeEnumsVal:
   - Enum: 3
     val: 1
   GUIDContainer:
-    _serializedGuid: 
+    _serializedGuid: 179b9cd5-8623-472e-89e9-724276cb71eb

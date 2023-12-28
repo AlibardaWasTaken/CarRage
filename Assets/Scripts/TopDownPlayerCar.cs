@@ -14,6 +14,10 @@ public class TopDownPlayerCar : TopDownCarController, IHittable
 
     public ParticleSystem BloodParticleSystem { get => _bloodParticleSystem; }
 
+    public override void DoDamage(int amount)
+    {
+        BloodManager.Instance.RemoveBlood(amount);
+    }
 
     public void Eat()
     {

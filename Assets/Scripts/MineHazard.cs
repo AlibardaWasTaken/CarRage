@@ -18,6 +18,6 @@ public class MineHazard : AbstractHazard
 
     protected override void DoEnemyAction(TopDownEnemyCar Enemy)
     {
-        Enemy.Damage(2);
+        Enemy.DoDamage(2);
     }
 }
